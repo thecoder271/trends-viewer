@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>WSB Stock Mentions</title>
+  <style>
+    body {
+      margin:0; 
+      padding:0; 
+      background:#111; 
+      color:white; 
+      font-family:sans-serif; 
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+    }
+    #count {
+      font-size: 2em;
+      text-align:center;
+    }
+  </style>
+</head>
+<body>
+
+<div id="count">Loading...</div>
+
+<script>
+  async function fetchRedditCount() {
+    const params = new URLSearchParams(window.location.search);
+    const ticker = (params.get("ticker") || "AAPL").toUpperCase();
+    
+    // RSS feed URL for r/wallstreetbets
+    const rssUrl = `https://www.reddit.com/r/wallstreetbets/new/.rss`;
+    
+    try {
+      const res = await fetch(rssUrl);
+      const text = await res.text();
+      const parser = new DOMParser();
+      const xml = parser.parseFromString(text, "application/xml");
+      
+      const items = xml.querySelectorAll("entry, item"); // RSS or Atom
+      const now = new Date();
+      let count = 0;
+      
+      items.forEach(item => {
+        const title = item.querySelector("title")?.textContent || "";
+        const pubDate = item.querySelector("updated, pubDate")?.textContent;
+        const postDate = pubDate ? new Date(pubDate) : now;
+
+        const hoursAgo = (now - postDate) / 1000 / 60 / 60;
+
+        if (hoursAgo <= 24 && title.toUpperCase().includes(ticker)) {
+          count++;
+        }
+      });
+
+      document.getElementById("count").textContent = `${ticker} mentions in r/wallstreetbets (last 24h): ${count}`;
+
+    } catch (err) {
+      console.error(err);
+      document.getElementById("count").textContent = "Error fetching Reddit data";
+    }
+  }
+
+  fetchRedditCount();
+</script>
+
+</body>
+</html>
