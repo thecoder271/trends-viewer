@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Stock News</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 10px;
+        font-family: sans-serif;
+        background: #111;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="newsWidgetContainer"></div>
+
+    <script>
+      // Get the stock symbol from the URL: ?symbol=TSLA
+      const params = new URLSearchParams(window.location.search);
+      const symbol = params.get("symbol") || "AAPL"; // default
+
+      const container = document.getElementById("newsWidgetContainer");
+
+      // Inject TradingView News Widget
+      container.innerHTML = `
+        <div class="tradingview-widget-container">
+          <div id="tradingview_news"></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js">
+          {
+            "symbols": [
+              {"proName":"NASDAQ:${symbol}","title":"${symbol}"}
+            ],
+            "showSymbolLogo": true,
+            "colorTheme": "dark",
+            "isTransparent": false,
+            "displayMode": "regular",
+            "locale": "en"
+          }
+          </script>
+        </div>
+      `;
+    </script>
+  </body>
+</html>
