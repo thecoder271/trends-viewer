@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ssl.gstatic.com/trends_nrtr/4284_RC01/embed_loader.js"></script>
+  </head>
+  <body>
+    <div id="trend"></div>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const stock = params.get("q") || "apple stock";
+
+      trends.embed.renderExploreWidget(
+        "TIMESERIES",
+        {
+          comparisonItem: [{
+            keyword: stock,
+            geo: "US",
+            time: "today 3-m"
+          }],
+          category: 0,
+          property: ""
+        },
+        {
+          exploreQuery: `date=today%203-m&geo=US&q=${encodeURIComponent(stock)}&hl=en`,
+          guestPath: "https://trends.google.com:443/trends/embed/"
+        }
+      );
+    </script>
+  </body>
+</html>
