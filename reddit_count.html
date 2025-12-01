@@ -30,8 +30,8 @@
     const params = new URLSearchParams(window.location.search);
     const ticker = (params.get("ticker") || "AAPL").toUpperCase();
     
-    // RSS feed URL for r/wallstreetbets
-    const rssUrl = `https://www.reddit.com/r/wallstreetbets/new/.rss`;
+    // Reddit RSS feed via CORS proxy
+    const rssUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent('https://www.reddit.com/r/wallstreetbets/new/.rss')}`;
     
     try {
       const res = await fetch(rssUrl);
